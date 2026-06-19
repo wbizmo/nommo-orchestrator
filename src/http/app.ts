@@ -1,7 +1,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
-import { createHealthResponse } from "../core/health.js";
+import { createHealthResponse, createRootResponse } from "../core/health.js";
 import type { NommoRuntimeConfig } from "../types/nommo.js";
 
 export async function buildApp(config: NommoRuntimeConfig) {
@@ -13,11 +13,7 @@ export async function buildApp(config: NommoRuntimeConfig) {
   await app.register(helmet);
 
   app.get("/", async () => {
-    return {
-      name: "NOMMO",
-      acronym: "Network-Oriented Management & Monitoring Orchestrator",
-      status: "online"
-    };
+    return createRootResponse();
   });
 
   app.get("/health", async () => {

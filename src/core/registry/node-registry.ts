@@ -1,4 +1,4 @@
-import type { ClusterNode, RegisterNodeInput, NodeStatus } from "../../types/node.js";
+import type { ClusterNode, NodeStatus, RegisterNodeInput } from "../../types/node.js";
 
 export class NodeRegistry {
   private readonly nodes = new Map<string, ClusterNode>();
@@ -16,7 +16,8 @@ export class NodeRegistry {
       metadata: input.metadata ?? {},
       registeredAt: now,
       updatedAt: now,
-      lastSeenAt: null
+      lastSeenAt: null,
+      heartbeatCount: 0
     };
 
     this.nodes.set(node.id, node);
@@ -43,6 +44,28 @@ export class NodeRegistry {
       ...node,
       status,
       updatedAt: new Date().toISOString()
+    };
+
+    this.nodes.set(id, updated);
+
+    return updated;
+  }
+
+  recordHeartbeat(id: string, observedAt: Date = new Date()): ClusterNode | null {
+    const node = this.nodes.get(id);
+
+    if (!node) {
+      return null;
+    }
+
+    const now = observedAt.toISOString();
+
+    const updated: ClusterNode = {
+      ...node,
+      status: "healthy",
+      updatedAt: now,
+      lastSeenAt: now,
+      heartbeatCount: node.heartbeatCount + 1
     };
 
     this.nodes.set(id, updated);

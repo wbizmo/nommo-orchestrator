@@ -20,4 +20,5 @@ export interface ClusterNode {
   registeredAt: string;
   updatedAt: string;
   lastSeenAt: string | null;
+  heartbeatCount: number;
 }

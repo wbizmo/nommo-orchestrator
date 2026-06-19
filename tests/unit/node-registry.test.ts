@@ -16,6 +16,7 @@ describe("NodeRegistry", () => {
     expect(node.id).toBe("node-1");
     expect(node.status).toBe("registered");
     expect(node.region).toBe("local");
+    expect(node.heartbeatCount).toBe(0);
     expect(registry.size()).toBe(1);
   });
 
@@ -67,6 +68,24 @@ describe("NodeRegistry", () => {
     const updated = registry.updateStatus("node-1", "healthy");
 
     expect(updated?.status).toBe("healthy");
+  });
+
+  it("records a heartbeat", () => {
+    const registry = new NodeRegistry();
+    const observedAt = new Date("2026-06-19T00:00:00.000Z");
+
+    registry.register({
+      id: "node-1",
+      name: "worker-1",
+      host: "127.0.0.1",
+      port: 7001
+    });
+
+    const updated = registry.recordHeartbeat("node-1", observedAt);
+
+    expect(updated?.status).toBe("healthy");
+    expect(updated?.lastSeenAt).toBe("2026-06-19T00:00:00.000Z");
+    expect(updated?.heartbeatCount).toBe(1);
   });
 
   it("returns null when updating a missing node", () => {

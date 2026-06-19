@@ -1,5 +1,9 @@
 import { NodeRegistry } from "../registry/node-registry.js";
-import type { RegisterServiceInput, ServiceDiscoveryResult, ServiceInstance } from "../../types/service.js";
+import type {
+  RegisterServiceInput,
+  ServiceDiscoveryResult,
+  ServiceInstance
+} from "../../types/service.js";
 
 export class ServiceRegistry {
   private readonly services = new Map<string, ServiceInstance[]>();
@@ -22,15 +26,21 @@ export class ServiceRegistry {
       host: input.host,
       port: input.port,
       protocol: input.protocol ?? "http",
+      weight: input.weight ?? 1,
       metadata: input.metadata ?? {},
       registeredAt: now,
       updatedAt: now
     };
 
     const existing = this.services.get(input.name) ?? [];
-    const withoutDuplicate = existing.filter((item) => item.id !== instance.id);
+    const withoutDuplicate = existing.filter(
+      (item) => item.id !== instance.id
+    );
 
-    this.services.set(input.name, [...withoutDuplicate, instance]);
+    this.services.set(
+      input.name,
+      [...withoutDuplicate, instance]
+    );
 
     return instance;
   }
@@ -43,32 +53,64 @@ export class ServiceRegistry {
   }
 
   discoverHealthy(name: string): ServiceDiscoveryResult {
-    const instances = this.services.get(name) ?? [];
+    const instances =
+      this.services.get(name) ?? [];
 
     return {
       service: name,
-      instances: instances.filter((instance) => {
-        const node = this.nodes.findById(instance.nodeId);
-        return node?.status === "healthy";
-      })
+      instances: instances.filter(
+        (instance) => {
+          const node =
+            this.nodes.findById(
+              instance.nodeId
+            );
+
+          return (
+            node?.status ===
+            "healthy"
+          );
+        }
+      )
     };
   }
 
   listServiceNames(): string[] {
-    return Array.from(this.services.keys()).sort();
+    return Array.from(
+      this.services.keys()
+    ).sort();
   }
 
-  removeNodeInstances(nodeId: string): number {
+  removeNodeInstances(
+    nodeId: string
+  ): number {
     let removed = 0;
 
-    for (const [name, instances] of this.services.entries()) {
-      const remaining = instances.filter((instance) => instance.nodeId !== nodeId);
-      removed += instances.length - remaining.length;
+    for (const [
+      name,
+      instances
+    ] of this.services.entries()) {
+      const remaining =
+        instances.filter(
+          (instance) =>
+            instance.nodeId !==
+            nodeId
+        );
 
-      if (remaining.length === 0) {
-        this.services.delete(name);
+      removed +=
+        instances.length -
+        remaining.length;
+
+      if (
+        remaining.length === 0
+      ) {
+        this.services.delete(
+          name
+        );
       } else {
-        this.services.set(name, remaining);
+        this.services.set(
+          name,
+          remaining
+        );
       }
     }
 

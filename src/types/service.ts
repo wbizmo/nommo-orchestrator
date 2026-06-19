@@ -4,6 +4,7 @@ export interface RegisterServiceInput {
   host: string;
   port: number;
   protocol?: "http" | "tcp";
+  weight?: number;
   metadata?: Record<string, string>;
 }
 
@@ -14,6 +15,7 @@ export interface ServiceInstance {
   host: string;
   port: number;
   protocol: "http" | "tcp";
+  weight: number;
   metadata: Record<string, string>;
   registeredAt: string;
   updatedAt: string;

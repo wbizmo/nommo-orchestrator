@@ -1,0 +1,17 @@
+NOMMO v1.0.0 Demo Flow
+
+1. Start NOMMO controller foundation.
+2. Register worker nodes.
+3. Register services on those nodes.
+4. Send heartbeats from workers.
+5. Discover healthy service instances.
+6. Route traffic across healthy nodes.
+7. Simulate node failure.
+8. Detect stale heartbeat.
+9. Mark failed node dead.
+10. Remove dead node from routing.
+11. Restore node with heartbeat.
+12. Return node to healthy routing pool.
+
+Core proof:
+NOMMO can model service orchestration, failure detection, failover, recovery, and healthy-only routing.

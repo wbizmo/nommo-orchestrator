@@ -1,0 +1,19 @@
+NOMMO v1.0.0 Feature Summary
+
+- TypeScript control-plane foundation
+- Node registry
+- Heartbeat processing
+- Service registry
+- Healthy service discovery
+- Failure detection
+- Round-robin routing
+- Weighted routing
+- Worker agent simulator
+- Self-healing cluster simulation
+- Event log
+- Cluster reporting
+- Unit tests
+- Integration tests
+- Benchmarks
+- GitHub Actions CI
+- Comprehensive documentation

@@ -1,0 +1,22 @@
+NOMMO v1.0.0 Test Proof
+
+Run:
+
+npm run typecheck
+npm test
+npm run build
+
+Expected proof areas:
+
+- runtime config
+- health endpoints
+- node registry
+- heartbeat service
+- service discovery
+- failure detection
+- routing
+- weighted routing
+- worker agent simulator
+- self-healing cluster simulation
+- event logging
+- cluster reporting

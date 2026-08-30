@@ -9,7 +9,27 @@ export async function buildApp(config: NommoRuntimeConfig) {
     logger: config.environment !== "test"
   });
 
-  await app.register(cors);
+  const configuredOrigins = (process.env.CORS_ALLOWED_ORIGINS || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  const allowedOrigins = new Set(
+    configuredOrigins.length > 0
+      ? configuredOrigins
+      : config.environment === "production"
+        ? []
+        : ["http://localhost:3000", "http://localhost:5173"]
+  );
+
+  await app.register(cors, {
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.has(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Origin is not allowed by CORS"), false);
+    },
+    credentials: false
+  });
   await app.register(helmet);
 
   app.get("/", async () => {
